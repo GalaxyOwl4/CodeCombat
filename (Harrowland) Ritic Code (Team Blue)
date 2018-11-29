@@ -1,0 +1,102 @@
+I got 7'th with this code
+def buildArmy():
+    
+    # Your hero can summon and command allied troops.
+    
+    buildOrder = ["archer"]
+    type = buildOrder[len(self.built) % len(buildOrder)]
+    if self.gold >= self.costOf(type):
+        self.summon(type) 
+carter= ({"x": 23, "y": 33})
+def friendGetCoin():
+    friends = self.findFriends()
+    for friend in friends:
+        if friend.type is "peasant":
+            nearest = friend.findNearest(friend.findItems())
+            if nearest:
+                self.command(friend, "move", nearest.pos)
+                
+def onSpawn(e):
+    while True:
+        enemy = pet.findNearestByType("munchkin")
+        if enemy:
+            if pet.isReady("cold-blast"):
+                pet.moveXY(enemy.pos.x, enemy.pos.y)
+                pet.coldBlast()
+        i = Math.random()
+        i = i*2
+        i = Math.round(i) 
+        # Find and fetch a "potion":
+        random = ["All hail EnderLord832!", "Kill them!", "I know you can do it !!"]
+        # Find and fetch a "potion":
+        enemy = pet.findNearestEnemy()
+        if enemy:
+            if pet.isReady("cold-blast"):
+                pet.moveXY(enemy.pos.x, enemy.pos.y)
+                pet.coldBlast()
+        pet.say(random[i])
+        hero.wait(1)
+        pet.moveXY(hero.pos.x, hero.pos.y)
+             
+                
+hero.phaseShift()
+hero.moveXY(46, 32)
+hero.blink(carter)
+enemy = hero.findNearest(hero.findEnemies())
+hero.backstab(enemy)
+hero.shadowVortex(hero.pos, {"x": 50, "y": 34})
+
+
+
+
+while True:
+    friendGetCoin()
+    buildArmy()
+    pet.on("spawn", onSpawn)  
+    friends = self.findFriends()
+    friend = hero.findNearest(hero.findFriends())
+    enemy = self.findNearest(self.findEnemies())
+    flag = self.findFlag("green")
+    flag2 = self.findFlag("black")
+    if enemy:
+        if enemy:
+            hero.scattershot(enemy)
+        if hero.isReady("chain-lightning") and hero.distanceTo(enemy)<=20:
+            hero.cast("chain-lightning", enemy)
+        if hero.isReady("wall-of-darkness") and hero.distanceTo(enemy)<=30:
+            hero.wallOfDarkness([{"x": 41, "y": 55}, {"x": 39, "y": 50}]);
+        if hero.distanceTo(enemy)<=31 and hero.isReady("throw") and enemy.health>=300:
+            hero.throw(enemy)
+        if hero.isReady("poison-cloud") and hero.distanceTo(enemy)<11:
+            hero.cast("poison-cloud", enemy)
+        if hero.isReady("shadow-vortex") and hero.distanceTo(enemy)<30:
+            hero.shadowVortex(hero.pos, {"x": 31, "y": 34 })
+        if hero.isReady("phase-shift"):
+            hero.phaseShift()
+            hero.say("Bring it on!")
+            
+            
+        if friends:
+            for friend in friends:
+                if friend.team == "ogres" and friend.type is "griffin-rider" or friend.type is "skeleton":
+                    target = friend.findNearest(friend.findEnemies())
+                    if target:
+                        self.command(friend, "defend", self)
+                if friend.team == "ogres" and friend.type is "archer":
+                    target = friend.findNearest(friend.findEnemies())
+                    if target:
+                        self.command(friend, "defend", self)
+    if self.isReady("summon-burl"):
+        self.cast("summon-burl")
+    if self.isReady("reset-cooldown"):
+        self.resetCooldown("summon-burl")
+    if self.isReady("summon-undead"):
+        hero.cast("summon-undead")
+        
+        
+    if flag:
+        self.pickUpFlag(flag)
+    if flag2:
+        self.pickUpFlag(flag2)
+        
+
