@@ -1,0 +1,90 @@
+# My Ritic the Cold program (Got me 1's place)
+#
+#
+#
+# Lets destroy that pathetic player!
+def buildArmy():
+    # Lets summon some troops!
+    buildOrder = ["paladin"]
+    type = buildOrder[len(self.built) % len(buildOrder)]
+    if self.gold >= self.costOf(type):
+        self.summon(type) 
+# I need some help in my conquest
+def commandPaladin():
+    for friend in hero.findFriends():
+        if friend.team == hero.team:
+            healingThreshold = hero.maxHealth
+            paladinHealingThreshold = friend.maxHealth / 3
+            if friend.type == "paladin":
+                if hero.health < healingThreshold and friend.canCast("heal"):
+                    hero.command(friend, "cast", "heal", hero)
+                if friend.health <= paladinHealingThreshold and friend.canCast("heal") and hero.health >= healingThreshold:
+                    hero.command(friend, "cast", "heal", friend)
+                else:
+                    hero.command(friend, "defend", hero)
+        else:
+            pass
+# It is nice to have some support. Also he is a great decoy!
+def onSpawn(event):
+    while True:
+        # Use your awsome ability
+        if pet.isReady("shape-shift"):
+            pet.shapeShift()
+            pet.moveXY(50, 37)
+        # Need to get a potion if there is one
+        potion = pet.findNearestByType("potion")
+        if potion:
+            pet.fetch(potion)
+        else:
+            i = Math.random()
+            i = i*2
+            i = Math.round(i) 
+            # This is the array of the words i want him to say
+            random = ["All hail GalaxyØwl4!", "Kill them!", "I know you can do it !!"]
+            pet.moveXY(hero.pos.x, hero.pos.y - 20)
+            # Now he is going to say the random sentance
+            pet.say(random[i])
+            pet.moveXY(hero.pos.x, hero.pos.y - 22)
+pet.on("spawn", onSpawn)
+# I need to use my awsome abilities!
+def useAdvantage():
+    goalPoint = Vector(50, 103)
+    if enemy:
+        if hero.isReady("blink") and hero.pos.y != goalPoint.y or hero.pos.x != goalPoint.x:
+            hero.blink(goalPoint)
+        if hero.isReady("wall-of-darkness") and hero.distanceTo(enemy) <= 30:
+            hero.wallOfDarkness([{"x": 40, "y": 105}, {"x": 50, "y": 90}, {"x": 60, "y": 105}])
+        if hero.canCast("chain-lightning") and enemy.health > 0 and hero.distanceTo(enemy) <= 30:
+            hero.cast("chain-lightning", enemy)
+        else:
+            pass
+        if hero.distanceTo(enemy) <= 31 and hero.isReady("throw") and enemy.health>= 100:
+            hero.throw(enemy)
+        if hero.isReady("phase-shift"):
+            hero.phaseShift()
+        if hero.isReady("shadow-vortex") and hero.distanceTo(enemy) <= 30:
+            hero.shadowVortex({"x": 50, "y": 91 }, {"x": 50, "y": 50 })
+# I need a cool name for my attack
+def operationDestroyTheWorld(enemy):
+    if enemy and hero.distanceTo(enemy) <= hero.attackRange and enemy.type !="door":
+        hero.scattershot(enemy)
+# This is the first tactic I use on spawn
+def firstTactic():
+    # This the goalpoint
+    goalPoint = Vector(50, 103)
+    while hero.pos.y != goalPoint.y:
+        hero.blink(goalPoint)
+    enemy = hero.findNearestEnemy()
+    if enemy and hero.distanceTo(enemy) <= 30:
+        hero.cast("chain-lightning", enemy)
+    else:
+        pass
+# I am now calling on the function
+firstTactic()
+while True:
+    buildArmy()
+    commandPaladin()
+    enemy = hero.findNearestEnemy()
+    operationDestroyTheWorld(enemy)
+    useAdvantage(enemy)
+    
