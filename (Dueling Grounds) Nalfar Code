@@ -1,0 +1,111 @@
+# I got 9'th with this code
+# Let's destroy the enemy hero! I know you are powerfull enough...but are you clever enough?
+enemyHero = hero.findNearestEnemy()
+def commandPaladin():
+    for friend in hero.findFriends():
+        if friend.type == "paladin":
+            paladin = hero.findNearest(hero.findByType("paladin"))
+            paladin = friend # So it includes all of the paladins
+            if friend.team == hero.team:
+                if hero.health < hero.maxHealth:
+                    if friend.canCast("heal"):
+                        hero.command(friend, "cast", "heal", hero)
+                    else:
+                        hero.command(friend, "defend", hero)
+                else:
+                    hero.command(friend, "defend", hero)
+            else:
+                pass
+# This is to command the sacrifices
+def soldierCommand():
+    for friend in hero.findFriends():
+        if friend.team == hero.team:
+            if friend.type == "soldier":
+                hero.command(friend, "defend", hero)
+        else:
+            pass
+# I need those skeletons to help me out!
+def skeletalHelp():
+    for friend in hero.findFriends():
+        if friend.type == "skeleton":
+            if friend.team == hero.team:
+                hero.command(friend, "defend", hero)
+            else:
+                pass
+# I need to summon troops now!
+def buildArmy():
+    # Your hero can summon and command allied troops.
+    buildOrder = ["soldier"]
+    type = buildOrder[len(hero.built) % len(buildOrder)]
+    if hero.gold >= hero.costOf(type):
+        hero.summon(type)
+# A wizard always needs encouragemant. Also it will freeze enemies and make them halpless babes! :)
+def onSpawn(e):
+    while True:
+        enemy = pet.findNearestByType("munchkin")
+        i = Math.random()
+        i = i*2
+        i = Math.round(i) 
+        # This is the array holding what you want it to say
+        random = ["All hail GalaxyØwl4!", "Kill them!", "I know you can do it !!"]
+        # Find and fetch a potion so you can heal yourself
+        potion = pet.findNearestByType("potion")
+        if potion and hero.health < hero.maxHealth:
+            pet.fetch(potion)
+        enemy = pet.findNearestEnemy()
+        if pet.isReady("shape-shift"):
+            pet.shapeShift()
+        pet.say(random[i])
+        pet.moveXY(hero.pos.x - 4, hero.pos.y)
+pet.on("spawn", onSpawn)
+# Now I need some spells
+def checkSpells(enemy):
+    if enemy:
+        if hero.isReady("devour") and enemy.health <= 200 and hero.distanceTo(enemy) <= 13:
+            hero.devour(enemy)
+        if hero.canCast("chain-lightning") and enemy.health > 0 and hero.distanceTo(enemy) <= 30:
+            hero.cast("chain-lightning", enemy)
+        if hero.health < 501 and hero.distanceTo(enemy)<=18 and hero.canCast("drain-life") and enemy.health > 0:
+            hero.cast("drain-life", enemy)
+        if hero.canCast("poison-cloud") and hero.distanceTo(enemy)<=30 and enemy.health > 0:
+            hero.cast("poison-cloud", enemy)
+        if hero.canCast("fear") and hero.distanceTo(enemy)<=25 and enemy.health > 0:
+            hero.cast("fear", enemy)
+    if hero.canCast("raise-dead"):
+        hero.cast("raise-dead")
+    if hero.canCast("summon-burl"):
+        hero.cast("summon-burl")
+    if hero.isReady("reset-cooldown"):
+        hero.resetCooldown("summon-burl")
+# Make sure you do not attack the door! Otherwise the ogres from the enemy side will attack you
+def attackAnythingButTheDoor(enemy):
+    if enemy and enemy.health > 0:
+        hero.attack(enemy)
+# I need more health. let me sacrifice some friends
+def sacrificeFriends():
+    friend = hero.findNearest(hero.findFriends())
+    if hero.canCast("summon-undead"):
+        hero.cast("summon-undead")
+        if hero.isReady("sacrifice"):
+            skeleton = hero.findNearest(hero.findByType("skeleton"))
+            if skeleton:
+                hero.cast("sacrifice", skeleton, hero)
+    for friend in hero.findFriends():
+        if friend and friend.type == "soldier":
+            if hero.isReady("sacrifice"):
+                hero.cast("sacrifice", friend, hero)
+# This is the super awsome attack
+def enemyHeroLightningBolt():
+    if hero.canCast("lightning-bolt"):
+        enemy = hero.findNearestEnemy()
+        if enemy:
+            hero.cast("lightning-bolt", enemy)
+# Moving to a safe spot
+while True:
+    buildArmy()
+    sacrificeFriends()
+    soldierCommand()
+    enemyHeroLightningBolt()
+    enemy = hero.findNearestEnemy()
+    attackAnythingButTheDoor(enemy)
+    checkSpells(enemy)
