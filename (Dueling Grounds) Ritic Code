@@ -1,0 +1,79 @@
+# I got 5'th with this code
+def buildArmy():
+    
+    buildOrder = ["archer"]
+    type = buildOrder[len(self.built) % len(buildOrder)]
+    if self.gold >= self.costOf(type):
+        self.summon(type) 
+carter= ({"x": hero.pos.x, "y": hero.pos.y-2})
+def friendGetCoin():
+    friends = self.findFriends()
+    for friend in friends:
+        if friend.type is "peasant":
+            nearest = friend.findNearest(friend.findItems())
+            if nearest:
+                self.command(friend, "move", nearest.pos)
+                
+                
+def onSpawn(e):
+    while True:
+        enemy = pet.findNearestByType("munchkin")
+        i = Math.random()
+        i = i*2
+        i = Math.round(i) 
+        random = ["All hail EnderLord832!", "Kill them!", "I know you can do it !!"]
+        if pet.isReady("shape-shift"):
+            pet.shapeShift()
+            pet.moveXY(12, 33)
+            pet.moveXY(14, 51)
+        pet.moveXY(14, 51)
+        pet.say(random[i])
+
+pet.on("spawn", onSpawn)
+enemy = hero.findNearest(hero.findEnemies())
+if enemy:
+    enemy.attack(enemy)
+    hero.shadowVortex(hero.pos, {"x": enemy.pos.x, "y": enemy.pos.y})
+    hero.wallOfDarkness([{"x": enemy.pos.x, "y": enemy.pos.y}, {"x": enemy.pos.x, "y": enemy.pos.y}]);
+    
+    
+    hero.phaseShift()
+    hero.blink(enemy.pos)
+    hero.moveXY(enemy.pos.x, enemy.pos.y)
+    hero.backstab(enemy)
+    center = Vector(38, 37)
+    hero.blink(center)
+else:
+    hero.shadowVortex(hero.pos, {"x": 38, "y": 37})
+    hero.phaseShift()
+    
+while True:
+    buildArmy()
+    enemy = self.findNearest(self.findEnemies())
+    if enemy:
+        hero.scattershot(enemy)
+        if hero.isReady("shadow-vortex"):
+            hero.shadowVortex(hero.pos, {"x": enemy.pos.x, "y": enemy.pos.y}, {"x": 38, "y": 37})
+            
+        if hero.distanceTo(enemy) <= 10 and hero.isReady("backstab") and hero.isReady("blink") and hero.isReady("phase-shift"):
+            hero.phaseShift()
+            hero.blink(enemy.pos)
+            hero.backstab(enemy)
+        if hero.distanceTo(enemy) <= 10:
+            if hero.pos.y > 27:
+                c = Vector(hero.pos.x - 10, hero.pos.y - 20)
+                hero.blink(c)
+            else:
+                if hero.pos.y < 65 and hero.pos.x < 64:
+                    c = Vector(hero.pos.x + 10, hero.pos.y + 20)
+                    hero.blink(c)
+        elif hero.isReady("chain-lightning") and hero.distanceTo(enemy) <= 30 and not hero.hasEffect("hide"):
+            hero.cast("chain-lightning", enemy)
+        if hero.isReady("wall-of-darkness"):
+            hero.wallOfDarkness([{"x": enemy.pos.x, "y": enemy.pos.y}, {"x": enemy.pos.x, "y": enemy.pos.y}]);
+        for friend in hero.findFriends():
+            if friend.team == hero.team and friend.type != "fake-peasant":
+                target = friend.findNearest(friend.findEnemies())
+                if target:
+                    self.command(friend, "attack", target)
+   
