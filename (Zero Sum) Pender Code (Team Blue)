@@ -1,0 +1,134 @@
+# I got 5'th with this code
+# Defeat the enemy hero in two minutes.
+def buildArmy():
+    buildOrder = ["paladin", "griffin-rider"]
+    type = buildOrder[len(hero.built) % len(buildOrder)]
+    if hero.gold >= hero.costOf(type):
+        hero.summon(type)
+# This will help me heal my troops
+def lowestHealthPaladin():
+    lowestHealth = 99999
+    lowestFriend = None
+    friends = self.findFriends()
+    for friend in friends:
+        if friend.health < lowestHealth and friend.health < friend.maxHealth:
+            lowestHealth = friend.health
+            lowestFriend = friend
+            
+    return lowestFriend
+def commandPaladin(paladin):
+    # Heal the paladin with the lowest health using lowestHealthPaladin()
+    target = lowestHealthPaladin()
+    nearest = paladin.findNearest(paladin.findEnemies())
+    healMe = 1000
+    #self.command(paladin, "shield")
+    busy = False
+    if target != None:
+        castable = paladin.canCast("heal", target)
+        if castable:
+            if hero.health < healMe:
+                hero.command(paladin, "cast", "heal", hero)
+                busy = True
+            else:
+                self.command(paladin, "cast", "heal",target)
+                busy = True
+        else:
+            if not busy:
+                if nearest:
+                    self.command(paladin, "attack", nearest)
+                    busy = True
+    else:
+        if nearest:
+            self.command(paladin, "attack", nearest)
+        else:
+            hero.command(paladin, "shield")
+# This is for my soldiers
+def commandSoldier(soldier):
+    soldiersEnemy = soldier.findNearestEnemy()
+    attacking = False
+    if soldiersEnemy:
+        attacking = True
+        if attacking == True:
+            hero.command(soldier, "attack", soldiersEnemy)
+    else:
+        attacking = False
+        if attacking == False:
+            hero.command(soldier, "defend", hero)
+# Griffin-rider
+def commandGriffinRider(griffinRider):
+    griffinsEnemy = griffinRider.findNearestEnemy()
+    spearing = False
+    if griffinsEnemy:
+        spearing = True
+        if spearing == True:
+            hero.command(griffinRider, "attack", griffinsEnemy)
+    else:
+        spearing = False
+        if spearing == False:
+            hero.command(griffinRider, "defend", hero)
+# Using the command
+def commandFriends():
+    # Command your friends.
+    friends = self.findFriends()
+    for friend in friends:
+        if friend.team == hero.team:
+            if friend.type == "paladin":
+                commandPaladin(friend)
+            if friend.type == "soldier":
+                commandSoldier(friend)
+            if friend.type == "griffin-rider":
+                commandGriffinRider(friend)
+        else:
+            pass
+# My abili!
+def useAbilities(enemy):
+    shouldAttack = False
+    painTreshhold = 500
+    if enemy:
+        dangerDistance = hero.distanceTo(enemy)
+        if dangerDistance <= 5:
+            shouldAttack = True
+        else:
+            shouldAttack = False
+        if shouldAttack == True:
+            if hero.isReady("mana-blast"):
+                hero.manaBlast()
+            if hero.canCast("fear"):
+                hero.cast("fear", enemy)
+            if hero.isReady("reset-cooldown"):
+                hero.resetCooldown("fear")
+            if hero.canCast("drain-life") and hero.health < painTreshhold:
+                hero.attack(enemy)
+        else:
+            if hero.canCast("goldstorm"):
+                hero.cast("goldstorm")
+            if hero.isReady("reset-cooldown"):
+                hero.resetCooldown("goldstorm")
+            if hero.canCast("raise-dead"):
+                potentialZombie = hero.findNearest(hero.findCorpses())
+                if potentialZombie:
+                    distanceToPotentialZombie = hero.distanceTo(potentialZombie)
+                    if distanceToPotentialZombie <= 20:
+                        hero.cast("raise-dead")
+# useDatAbilities
+def useDatAbilities():
+    for dangerousEnemy in hero.findEnemies():
+        useAbilities(dangerousEnemy)
+# Collect some coins
+def collectCoins():
+    item = hero.findNearestItem()
+    if item:
+        if hero.isReady("jump"):
+            hero.jumpTo(Vector(item.pos.x, item.pos.y))
+        hero.move(Vector(item.pos.x, item.pos.y))
+while True:
+    # This is the enemy hero
+    enemyHero = hero.findNearest(hero.findByType("sorcerer"))
+    # this is my army
+    buildArmy()
+    # Your hero can collect coins and summon troops.
+    collectCoins()
+    # She also commands your allies in battle.
+    commandFriends()
+    # Use your hero's abilities to turn the tide.
+    useDatAbilities()
