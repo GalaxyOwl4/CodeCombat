@@ -1,0 +1,93 @@
+I got 9'th place with this code
+# Stay alive longer than the enemy hero!
+hero.jumpTo(Vector(91, 70))
+hero.cast("invisibility", hero)
+hero.buildXY("fire-trap", 80, 70)
+hero.buildXY("decoy", 80, 70)
+hero.jumpTo(Vector(110 ,70))
+def findStrongestEnemy(enemies):
+    strongest = None
+    strongestHealth = 0
+    enemyIndex = 0
+    while enemyIndex < len(enemies):
+        enemy = enemies[enemyIndex]
+        if enemy.health > strongestHealth:
+            strongest = enemy
+            strongestHealth = enemy.health
+        enemyIndex += 1
+    return strongest
+def commandPaladin():
+    for friend in hero.findFriends():
+        if friend.team == hero.team and friend.type == "paladin":
+            if friend.canCast("heal"):
+                if hero.health < hero.maxHealth and not hero.hasEffect("hide"):
+                    hero.command(friend, "cast", "heal", hero)
+                if friend.health < 500 and hero.health > 3000:
+                    hero.command(friend, "cast", "heal", friend)
+            else:
+                hero.command(friend, "shield")
+                
+        else:
+            pass
+def needHeal():
+    if hero.findNearest(hero.findFriends()):
+        if hero.findNearest(hero.findFriends()).type == "paladin":
+            friend = hero.findNearest(hero.findFriends())
+            if friend.canCast("heal"):
+                hero.command(friend, "cast", "heal", hero)
+            else:
+                hero.command(friend, "shield")
+def buildArmy():
+    buildOrder = ["paladin", "decoy"]
+    type = buildOrder[len(hero.built) % len(buildOrder)]
+    if hero.gold >= hero.costOf(type):
+        hero.summon(type)
+def desperateBuildArmy():
+    buildOrder = ["decoy"]
+    type = buildOrder[len(hero.built) % len(buildOrder)]
+    if hero.gold >= hero.costOf(type):
+        hero.summon(type)
+def onSpawn(event):
+    while True:
+        potion = pet.findNearestByType("potion")
+        if potion and not hero.hasEffect("hide"):
+            pet.fetch(potion)
+        else:
+            enemy = hero.findNearestEnemy()
+            if enemy and enemy.maxHealth < hero.maxHealth / 10:
+                pet.carryUnit(enemy, 50, 70)
+                if not hero.hasEffect("hide"):
+                    pet.moveXY(hero.pos.x, hero.pos.y)
+                else:
+                    pet.moveXY(110, 70)
+pet.on("spawn", onSpawn)
+while True:
+    # Devise your own strategy. Be creative!
+    buildArmy()
+    commandPaladin()
+    enemy = hero.findNearestEnemy()
+    friends = hero.findFriends()
+    uselessEnemy = "munchkin"
+    if enemy:
+        if hero.health < 480:
+            break
+        if hero.isReady("bash") and enemy.health > 0 and hero.distanceTo(enemy) <= 5 and not hero.hasEffect("hide") and not enemy.type == uselessEnemy and hero.health > 500:
+            hero.bash(enemy)
+        if hero.canCast("chain-lightning") and enemy.health > 0 and not hero.hasEffect("hide") and hero.health > 500:
+            hero.cast("chain-lightning", enemy)
+        if hero.canCast("invisibility"):
+            hero.cast("invisibility", hero) + hero.jumpTo(Vector(110, 70))
+            if hero.isReady("jump"):
+                hero.jumpTo(Vector(110, 70))
+        if hero.hasEffect("hide") and hero.distanceTo(enemy) <= 5 and hero.health > 500:
+            hero.buildXY("fire-trap", enemy.pos.x, enemy.pos.y)
+            needHeal()
+        else:
+            hero.shield()
+while True:
+    desperateBuildArmy()
+    commandPaladin()
+    if hero.canCast("invisibility"):
+        hero.cast("invisibility", hero)
+    hero.shield()
+    
