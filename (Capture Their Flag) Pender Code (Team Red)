@@ -1,0 +1,80 @@
+I got fifth with this code
+# For this level you will have 3 main functions that you need to use.
+# placeFlag - this should be called three times at the beginning of your code to hide your 3 flags
+# findEnemyFlags - this should be called in order to locate enemy flags, it returns an array of any enemy flag within 5 units of you
+# captureFlag - this is called on a flag you've found and captures it if you are within 3 units of the flag, then you can run the flag back to your side of the map
+# you also have the ability to control your robot-walker, though he can only fire, not move
+currentLoc = 0
+locations = [{"x": 66, "y": 66}, {"x": 91, "y": 65}, {"x": 95, "y": 82}, {"x": 105, "y": 91},{"x": 105, "y": 78}, {"x": 95, "y": 82}, {"x": 91, "y": 65}, {"x": 92, "y": 40}, {"x": 105, "y": 27}, {"x": 105, "y": 18}, {"x": 92, "y": 40}, {"x": 91, "y": 65}]
+defendPos = Vector(20, 60)
+def commandRobotWalker():
+    for robotWalker in hero.findFriends():
+        if robotWalker.team == hero.team:
+            if robotWalker.type == "robot-walker":
+                robotsEnemy = robotWalker.findNearestEnemy()
+                enemyHero = "Hero Placeholder 1"
+                if robotsEnemy:
+                    if robotWalker.distanceTo(robotsEnemy) <= 50:
+                        hero.command(robotWalker, "attack", robotsEnemy)
+                    elif robotWalker.distanceTo(enemyHero) <= 10:
+                        hero.command(robotWalker, "attack", enemyHero)
+                    else:
+                        hero.command(robotWalker, "defend", defendPos)
+                else:
+                    hero.command(robotWalker, "defend", defendPos)
+locPos = Vector(11, 10)
+flagTable = 0
+while flagTable < 3:
+    hero.placeFlag(defendPos)
+    flagTable += 1
+while True:
+    commandRobotWalker()
+    robot = hero.findNearest(hero.findFriends())
+    beam = self.findNearest(self.findEnemyMissiles())
+    goal = Vector.subtract(locPos, self.pos)
+    goal = Vector.normalize(goal)
+    goal = Vector.multiply(goal, 10)
+    if hero.canCast("haste", hero):
+        hero.cast("haste", hero)
+    if hero.canCast("flame-armor", hero):
+        hero.cast("flame-armor", hero)
+    enemy = hero.findNearestEnemy()
+    if enemy:
+        if hero.distanceTo(enemy) <= 32:
+            if hero.canCast("magic-missile", enemy):
+                hero.cast("magic-missile", enemy)
+        if hero.distanceTo(enemy) <= 20:
+            if hero.canCast("shockwave", enemy):
+                hero.cast("shockwave", enemy)
+    if enemy and enemy.type != "robot-walker":
+        if hero.canCast("slow") and hero.distanceTo(enemy) <= 10:
+            hero.cast("slow", enemy)
+    enemyFlag = hero.findNearest(hero.findEnemyFlags())
+    if enemyFlag:
+        hero.move(enemyFlag.pos)
+        hero.captureFlag(enemyFlag)
+        if hero.distanceTo(enemyFlag) <= 3:
+            hero.moveXY(70, 64)
+    else:
+        beam = self.findNearest(self.findEnemyMissiles())
+        if beam:
+            distance = self.distanceTo(beam)
+        else:
+            distance = None
+        if distance and distance < 10 and beam.pos.x > 70:
+            bvector = Vector.subtract(self.pos, beam.pos)
+            bvector = Vector.normalize(bvector)
+            bvector = Vector.multiply(bvector, 10)
+            goal = Vector.add(goal, bvector)
+            moveToPos = Vector.add(self.pos, goal)
+            hero.move(moveToPos)
+        else:
+            hero.move(locations[currentLoc])
+            if hero.isReady("jump"):
+                hero.jumpTo(locations[currentLoc])
+            if hero.targetPos:
+                if hero.distanceTo(hero.targetPos) <= 1:
+                    if currentLoc < len(locations) - 1:
+                        currentLoc+= 1
+                    else:
+                        currentLoc = 0
