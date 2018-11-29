@@ -1,0 +1,79 @@
+# I got 7'th with this code
+# Be the first to 100 gold!
+# If you are defeated, you will respawn at 67% gold.
+enemyHero = hero.findNearestEnemy()
+if enemyHero:
+    hero.phaseShift()
+    pet.shapeShift()
+    hero.blink(enemyHero.pos)
+    hero.blink(enemyHero.pos)
+    hero.blink(enemyHero.pos)
+    enemy = hero.findNearestEnemy()
+    if enemy:
+        hero.backstab(enemyHero)
+    else:
+        hero.say("Where r u?")
+if not enemy:
+    if hero.isReady("shadow-vortex"):
+        center = {"x":40, "y":32}
+        hero.shadowVortex(hero.pos, center)
+def moveAway(dest, firetraps):
+    # This creates a vector that will move you 4 meters toward the goalPoint
+    # First, create a vector from your hero to the goal point.
+    goal = Vector.subtract(dest, self.pos)
+    # Then, normalize it into a 1m distance vector
+    goal = Vector.normalize(goal)
+    # Finally, multiply the 1m vector by 4, to get a 3m long vector.
+    goal = Vector.multiply(goal, 4)
+    
+    # To avoid the firetraps, if you get within 5 meters of a firetrap, you should vector away from it.
+    trap = self.findNearest(firetraps)
+    distance = self.distanceTo(trap)
+    if distance < 5:
+        # First, make a Vector from the firetrap to you
+        # Now use Vector.normalize and Vector.multiply to make it 5m long
+        # Once you have the 5m vector away from the firetrap, use Vector.add to add it to your goal vector!
+        vector = Vector.subtract(self.pos, trap.pos)
+        normalize = Vector.normalize(vector)
+        mul=Vector.multiply(normalize, 5)
+        goal = Vector.add(mul, goal)
+        
+    # Finally, determine where to move by adding your goal vector to your current position.
+    moveToPos = Vector.add(self.pos, goal)
+    self.move(moveToPos)
+
+
+while True:
+    friends = self.findFriends()
+    nearest = hero.findNearest(hero.findFriends())
+    enemy = self.findNearest(self.findEnemies())
+    flag = self.findFlag("green")
+    flag2 = self.findFlag("black")
+    item = hero.findNearestItem()
+    if item:
+        enemy = hero.findNearestEnemy()
+        if enemy and hero.distanceTo(enemy) <= 5:
+            pass
+        if pet.isReady("shape-shift"):
+            pet.shapeShift()
+        enemy = hero.findNearestEnemy()
+        if enemy and hero.isReady("wall-of-darkness")  and not hero.hasEffect("phase-shift") and not hero.hasEffect("hide") and hero.distanceTo(enemy) <= 30:
+            hero.wallOfDarkness([{"x": enemy.pos.x, "y": enemy.pos.y}, {"x": enemy.pos.x, "y": enemy.pos.y}]);
+            
+        if enemy and hero.isReady("shadow-vortex") and not hero.hasEffect("phase-shift") and not hero.hasEffect("hide"):
+            hero.shadowVortex(enemy.pos, {"x": 18, "y": 34})
+        if enemy and hero.isReady("chain-lightning") and not hero.hasEffect("phase-shift") and not hero.hasEffect("hide"):
+            hero.cast("chain-lightning", enemy)
+        if hero.isReady("blink"):
+            hero.blink(item.pos)
+        if hero.isReady("jump"):
+            hero.jumpTo(item.pos)
+        if item and hero.isPathClear(hero.pos, item.pos):
+            hero.move(item.pos)
+        else:
+            hero.blink(item.pos)
+        if hero.isReady("invisibility") and not hero.hasEffect("phase-shift"):
+            hero.cast("invisibility", hero)
+        if hero.isReady("phase-shift") and not hero.hasEffect("hide"):
+            hero.phaseShift()
+                
