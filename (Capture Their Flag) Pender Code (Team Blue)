@@ -1,0 +1,46 @@
+# I got fifth with this code
+# For this level you will have 3 main functions that you need to use.
+# placeFlag - this should be called three times at the beginning of your code to hide your 3 flags
+# findEnemyFlags - this should be called in order to locate enemy flags, it returns an array of any enemy flag within 5 units of you
+# captureFlag - this is called on a flag you've found and captures it if you are within 3 units of the flag, then you can run the flag back to your side of the map
+# you also have the ability to control your robot-walker, though he can only fire, not move
+place = Vector(120, 60)
+hero.jumpTo(Vector())
+i = 0
+while i < 3:
+    hero.placeFlag(place)
+    i += 1
+def defendPos():
+    for friend in hero.findFriends():
+        enemy = friend.findNearestEnemy()
+        if enemy:
+            hero.command(friend, "attack", enemy)
+while True:
+    defendPos()
+    enemy = hero.findNearestEnemy()
+    if hero.canCast("haste", hero):
+        hero.cast("haste", hero)
+    if hero.canCast("invisibility", hero):
+        hero.cast("invisibility", hero)
+    nearest = hero.findNearest(hero.findByType("flag"))
+    if nearest:
+        if nearest.pos.x != 120 or nearest.pos.y != 60:
+            if nearest:
+                if hero.distanceTo(nearest) <= 3:
+                    hero.captureFlag(nearest)
+                    hero.moveXY(75, 109)
+                    hero.moveXY(70, 64)
+                else:
+                    if nearest.team != hero.team and nearest.pos.x < 67 and nearest.pos.y < 100:
+                        if hero.distanceTo(nearest) > 20:
+                            if hero.isReady("jump"):
+                                hero.jumpTo(nearest.pos)
+                        hero.move(nearest.pos)
+                    else:
+                        if hero.isReady("jump"):
+                            hero.jumpTo(Vector(20, 61))
+                        hero.move(Vector(20, 61))
+        else:
+            hero.move(Vector(21, 61))
+    else:
+        hero.move(Vector(73, 62))
