@@ -1,0 +1,47 @@
+# I got third with this code
+# Defeat the enemy hero in under three minutes.
+hero.summon("artillery")
+hero.summon("artillery")
+nearest = hero.findNearest(hero.findFriends())
+c = Vector(24, 20)
+def buildArmy():
+    # Your hero can summon and command allied troops.
+    buildOrder = ["archer", "archer","archer", "archer", "archer","archer","archer", "archer","archer", "archer", "archer","archer","archer", "archer","archer", "artillery"]  # "archer", "artillery", "arrow-tower"
+    type = buildOrder[len(hero.built) % len(buildOrder)]
+    if hero.gold >= hero.costOf(type):
+        hero.summon(type)
+    
+def commandArmy():
+    friends = hero.built
+    enemies = hero.findEnemies()
+    points = hero.getControlPoints()
+    for i, friend in enumerate(friends):
+        if friend.health <= 0 or friend.type == "arrow-tower":
+            continue
+        # Command your army to capture control points.
+        # Make sure to choose your control points wisely!
+        point = points[i % len(points)]
+        if friend.type == "artillery":
+            hero.command(friend, "attack", "Hero Placeholder 1")
+        else:
+            hero.command(friend, "defend", hero)
+    
+def controlHero():
+    enemies = hero.findEnemies()
+    nearestEnemy = hero.findNearest(enemies)
+    shouldAttack = hero.time > 30
+    # Use your hero's abilities to turn the tide.
+    if shouldAttack:
+        enemy = hero.findNearestEnemy()
+        if enemy and hero.distanceTo(enemy) <= 15:
+            if hero.isReady("stomp"):
+                hero.stomp()
+            hero.attack(enemy)
+    enemy = hero.findNearestEnemy()
+    if enemy and hero.isReady("throw") and hero.distanceTo(enemy) <= 20:
+        hero.throw(enemy)
+ 
+while True:
+    buildArmy()
+    commandArmy()
+    controlHero()
